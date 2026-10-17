@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uygunluk Testi - Bilişim Teknolojileri Alanı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 2rem;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .test-header h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .question {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .question h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .option {
+            padding: 1.5rem;
+            background: var(--light);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .result {
+            display: none;
+            text-align: center;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .result-desc {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .recommendations {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .recommendations h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .recommendations ul {
+            list-style: none;
+        }
+        
+        .recommendations li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .recommendations li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Bu Bölüm Bana Uygun Mu?</h1>
+            <p>6 soruyu cevaplayarak bilişim teknolojileri alanının size uygun olup olmadığını öğrenin.</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div id="questions">
+            <div class="question active" data-q="1">
+                <h3>1. Teknoloji ile ilginiz nasıl?</h3>
+                <div class="options">
+                    <div class="option" data-value="3">
+                        <strong>Çok yüksek</strong> - Yeni teknolojileri takip ederim
+                    </div>
+                    <div class="option" data-value="2">
+                        <strong>Orta</strong> - Gerektiğinde teknoloji kullanırım
+                    </div>
+                    <div class="option" data-value="1">
+                        <strong>Düşük</strong> - Teknoloji beni pek ilgilendirmez
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-q="2">
+                <h3>2. Problem çözme konusunda kendinizi nasıl görüyorsunuz?</h3>
+                <div class="options">
+                    <div class="option" data-value="3">
+                        <strong>Çok iyi</strong> - Karmaşık problemleri çözmeyi severim
+                    </div>
+                    <div class="option" data-value="2">
+                        <strong>İyi</strong> - Çoğu problemi çözebilirim
+                    </div>
+                    <div class="option" data-value="1">
+                        <strong>Zor</strong> - Problem çözme beni zorlar
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-q="3">
+                <h3>3. Matematik ve mantık dersleri ile aranız nasıl?</h3>
+                <div class="options">
+                    <div class="option" data-value="3">
+                        <strong>Çok iyi</strong> - Bu dersleri severim
+                    </div>
+                    <div class="option" data-value="2">
+                        <strong>İyi</strong> - İdare ederim
+                    </div>
+                    <div class="option" data-value="1">
+                        <strong>Zor</strong> - Bu dersler beni zorlar
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-q="4">
+                <h3>4. Yaratıcılık ve tasarım konusunda kendinizi nasıl görüyorsunuz?</h3>
+                <div class="options">
+                    <div class="option" data-value="3">
+                        <strong>Çok yaratıcı</strong> - Tasarım yapmayı severim
+                    </div>
+                    <div class="option" data-value="2">
+                        <strong>Orta</strong> - Bazen yaratıcı fikirlerim olur
+                    </div>
+                    <div class="option" data-value="1">
+                        <strong>Düşük</strong> - Yaratıcılık benim alanım değil
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-q="5">
+                <h3>5. Takım çalışması konusunda nasılsınız?</h3>
+                <div class="options">
+                    <div class="option" data-value="3">
+                        <strong>Çok iyi</strong> - Takım çalışmasını severim
+                    </div>
+                    <div class="option" data-value="2">
+                        <strong>İyi</strong> - Takımda çalışabilirim
+                    </div>
+                    <div class="option" data-value="1">
+                        <strong>Zor</strong> - Bireysel çalışmayı tercih ederim
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-q="6">
+                <h3>6. Sürekli öğrenme konusunda motivasyonunuz nasıl?</h3>
+                <div class="options">
+                    <div class="option" data-value="3">
+                        <strong>Çok yüksek</strong> - Sürekli yeni şeyler öğrenmeyi severim
+                    </div>
+                    <div class="option" data-value="2">
+                        <strong>Orta</strong> - Gerektiğinde öğrenirim
+                    </div>
+                    <div class="option" data-value="1">
+                        <strong>Düşük</strong> - Öğrenmek beni yorar
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="btn btn-outline" id="prevBtn" style="display: none;">Önceki</button>
+            <button class="btn btn-primary" id="nextBtn">Sonraki</button>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="result-icon" id="resultIcon"></div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <p class="result-desc" id="resultDesc"></p>
+            <div class="recommendations" id="recommendations"></div>
+            <a href="index.html" class="btn btn-primary">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+    <script>
+        let currentQ = 1;
+        const totalQ = 6;
+        let answers = {};
+        
+        const questions = document.querySelectorAll('.question');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progressFill = document.getElementById('progressFill');
+        const result = document.getElementById('result');
+        
+        // Update progress
+        function updateProgress() {
+            const progress = (currentQ / totalQ) * 100;
+            progressFill.style.width = progress + '%';
+        }
+        
+        // Show question
+        function showQuestion(q) {
+            questions.forEach(question => question.classList.remove('active'));
+            document.querySelector(`[data-q="${q}"]`).classList.add('active');
+            
+            prevBtn.style.display = q > 1 ? 'block' : 'none';
+            nextBtn.textContent = q === totalQ ? 'Sonuçları Gör' : 'Sonraki';
+            
+            updateProgress();
+        }
+        
+        // Option selection
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.closest('.question');
+                const q = question.dataset.q;
+                
+                question.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                answers[q] = parseInt(this.dataset.value);
+            });
+        });
+        
+        // Next button
+        nextBtn.addEventListener('click', () => {
+            if (!answers[currentQ]) {
+                alert('Lütfen bir seçenek seçin.');
+                return;
+            }
+            
+            if (currentQ < totalQ) {
+                currentQ++;
+                showQuestion(currentQ);
+            } else {
+                showResults();
+            }
+        });
+        
+        // Previous button
+        prevBtn.addEventListener('click', () => {
+            if (currentQ > 1) {
+                currentQ--;
+                showQuestion(currentQ);
+            }
+        });
+        
+        // Show results
+        function showResults() {
+            const total = Object.values(answers).reduce((sum, val) => sum + val, 0);
+            const max = totalQ * 3;
+            const percentage = (total / max) * 100;
+            
+            document.getElementById('questions').style.display = 'none';
+            document.querySelector('.nav-buttons').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            
+            let resultData;
+            
+            if (percentage >= 80) {
+                resultData = {
+                    icon: '🎯',
+                    title: 'Mükemmel Uyum!',
+                    desc: 'Bilişim Teknolojileri alanı sizin için ideal! Teknolojiye olan ilginiz ve yetenekleriniz bu alanda başarılı olmanız için mükemmel.',
+                    recommendations: [
+                        'Programlama dillerini öğrenmeye başlayın',
+                        'Teknoloji bloglarını takip edin',
+                        'Küçük projeler geliştirin',
+                        'Açık kaynak projelere katkıda bulunun'
+                    ]
+                };
+            } else if (percentage >= 60) {
+                resultData = {
+                    icon: '👍',
+                    title: 'İyi Uyum',
+                    desc: 'Bilişim Teknolojileri alanında başarılı olabilirsiniz! Bazı alanlarda kendinizi geliştirmeniz gerekebilir.',
+                    recommendations: [
+                        'Matematik ve mantık becerilerinizi güçlendirin',
+                        'Basit programlama örnekleriyle başlayın',
+                        'Online kurslarla kendinizi geliştirin',
+                        'Pratik projeler yapın'
+                    ]
+                };
+            } else {
+                resultData = {
+                    icon: '🤔',
+                    title: 'Dikkatli Düşünün',
+                    desc: 'Bilişim Teknolojileri alanı şu anda size tam uygun görünmüyor. Ancak ilginiz varsa, eksik yönlerinizi geliştirebilirsiniz.',
+                    recommendations: [
+                        'Teknolojiye olan ilginizi artırmaya çalışın',
+                        'Problem çözme becerilerinizi geliştirin',
+                        'Basit bilgisayar uygulamalarını keşfedin',
+                        'Kariyer danışmanından yardım alın'
+                    ]
+                };
+            }
+            
+            document.getElementById('resultIcon').textContent = resultData.icon;
+            document.getElementById('resultTitle').textContent = resultData.title;
+            document.getElementById('resultDesc').textContent = resultData.desc;
+            
+            const recHTML = `
+                <h4>Önerilerimiz:</h4>
+                <ul>
+                    ${resultData.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                </ul>
+            `;
+            document.getElementById('recommendations').innerHTML = recHTML;
+            
+            result.classList.add('show');
+        }
+        
+        updateProgress();
+    </script>
+</body>
+</html>
